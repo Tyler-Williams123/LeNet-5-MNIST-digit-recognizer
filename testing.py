@@ -1,40 +1,35 @@
-import torch
-import torchvision
-import torchvision.transforms as transforms # figure out why we use different loss functions just all of this
 import ConvNet
-
-LeNet5 = ConvNet.convolutionalNetwork()
+import torchvision
+import torchvision.transforms as transforms
+import torch
 
 transform = transforms.Compose([
     transforms.Pad(2),
     transforms.ToTensor()
 ])
 
-trainingData = torchvision.datasets.MNIST(
-    root="data",
-    train=True,
+testingData = torchvision.datasets.MNIST(
+    "data",
+    train=False,
     transform=transform,
     download=True
 )
 
-dataLoader = torch.utils.data.DataLoader(trainingData, 64, shuffle=True)
-loss_fn = torch.nn.MSELoss()
-optim = torch.optim.Adam(LeNet5.parameters())
+LeNet5 = ConvNet.convolutionalNetwork()
+LeNet5.load_state_dict(torch.load("LeNet5.pt"))
+dataLoader = torch.utils.data.DataLoader(testingData, 10)
 
-# x= next(iter(dataLoader))[0]
-# print(LeNet5(x))
+totalCorrect = 0
+total = 0
 
-for batch, (x, y) in enumerate(dataLoader):
-    y_hat = LeNet5(x)
+LeNet5.eval()
+with torch.no_grad():
+    for x, y in dataLoader:
+        output = LeNet5(x)
+        output = torch.argmax(output, 1)
 
-    y_true = torch.zeros(y.size(0), 10)
-    y_true.scatter_(1, y.unsqueeze(1), 1)
+        totalCorrect += (output == y).sum().item()
+        total += y.size(0)
 
-    loss = loss_fn(y_hat, y_true)
-
-    optim.zero_grad()
-    loss.backward()
-    optim.step()
-
-    if(batch % 50 == 0):
-        print(loss.item())
+    accuracy = totalCorrect / total * 100
+    print(accuracy)
