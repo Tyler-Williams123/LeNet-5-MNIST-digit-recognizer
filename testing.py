@@ -21,7 +21,8 @@ dataLoader = torch.utils.data.DataLoader(trainingData, 64, shuffle=True)
 loss_fn = torch.nn.MSELoss()
 optim = torch.optim.Adam(LeNet5.parameters())
 
-# print(LeNet5(next(iter(dataLoader))[0]))
+# x= next(iter(dataLoader))[0]
+# print(LeNet5(x))
 
 for batch, (x, y) in enumerate(dataLoader):
     y_hat = LeNet5(x)

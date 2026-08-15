@@ -50,7 +50,7 @@ class convolutionalNetwork(nn.Module):
         self.s4Bias = nn.Parameter(torch.randn(16))
 
         self.centers = nn.Parameter(torch.randn(10, 84))
-        self.beta = nn.Parameter(torch.ones(10))
+        self.beta = nn.Parameter(torch.full((10,), 0.01))
 
         self.layer1 = nn.Conv2d(in_channels=1, out_channels=6, kernel_size=5)
         self.layer2 = nn.AvgPool2d(kernel_size=2, stride=2)
