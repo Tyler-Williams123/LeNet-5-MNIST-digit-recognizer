@@ -22,7 +22,7 @@ def main():
         download=True,
     )
 
-    dataLoader = torch.utils.data.DataLoader(trainingData, 500, shuffle=True, num_workers=4)
+    dataLoader = torch.utils.data.DataLoader(trainingData, 100, shuffle=True, num_workers=4)
     loss_fn = torch.nn.MSELoss()
     optim = torch.optim.Adam(LeNet5.parameters())
 
@@ -46,14 +46,12 @@ def main():
             optim.step()
 
             if(loss.item() < 0.00005):
-                break
+                torch.cuda.synchronize()
+                end = time.perf_counter()
+                print("converged to 0.00005 by " + str(end - start))
 
             if(batch % 50 == 0):
                 print(loss.item())
-
-    torch.cuda.synchronize()
-    end = time.perf_counter()
-    print("converged to 0.00005 by " + str(end - start))
 
     torch.save(LeNet5.state_dict(), "LeNet5.pt")
 
