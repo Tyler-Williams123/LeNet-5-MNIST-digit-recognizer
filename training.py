@@ -10,19 +10,9 @@ device = torch.device("cuda")
 def main():
     LeNet5 = ConvNet.convolutionalNetwork().to(device)
 
-    transform = transforms.Compose([
-        transforms.Pad(2),
-        transforms.ToTensor(),
-    ])
+    dataset = torch.utils.data.TensorDataset(*torch.load("MNIST_Preprocessed.pt"))
 
-    trainingData = torchvision.datasets.MNIST(
-        root="data",
-        train=True,
-        transform=transform,
-        download=True,
-    )
-
-    dataLoader = torch.utils.data.DataLoader(trainingData, 100, shuffle=True, num_workers=4)
+    dataLoader = torch.utils.data.DataLoader(dataset, 100, shuffle=True, num_workers=0)
     loss_fn = torch.nn.MSELoss()
     optim = torch.optim.Adam(LeNet5.parameters())
 
@@ -36,10 +26,7 @@ def main():
 
             y_hat = LeNet5(x)
 
-            y_true = torch.zeros(y.size(0), 10, device=device)
-            y_true.scatter_(1, y.unsqueeze(1), 1)
-
-            loss = loss_fn(y_hat, y_true)
+            loss = loss_fn(y_hat, y)
 
             optim.zero_grad()
             loss.backward()
