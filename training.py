@@ -10,9 +10,9 @@ device = torch.device("cuda")
 def main():
     LeNet5 = ConvNet.convolutionalNetwork().to(device)
 
-    dataset = torch.utils.data.TensorDataset(*torch.load("MNIST_Preprocessed.pt"))
+    dataset = torch.utils.data.TensorDataset(*torch.load("data/MNIST_Preprocessed(MSE).pt"))
 
-    dataLoader = torch.utils.data.DataLoader(dataset, 100, shuffle=True, num_workers=0)
+    dataLoader = torch.utils.data.DataLoader(dataset, 240, shuffle=True, num_workers=2)
     loss_fn = torch.nn.MSELoss()
     optim = torch.optim.Adam(LeNet5.parameters())
 
