@@ -38,7 +38,7 @@ class c3(nn.Module):
         x = F.conv2d(x, weights, self.convLayer.bias)
         return x
 
-class convolutionalNetwork(nn.Module):
+class convolutionalNetwork(nn.Module): # try making final connection just distance no gausian 
     def __init__(self,):
         super().__init__()
         self.activationFunction = nn.Tanh()
@@ -58,7 +58,6 @@ class convolutionalNetwork(nn.Module):
         self.layer4 = nn.AvgPool2d(kernel_size=2, stride=2)
         self.layer5 = nn.Conv2d(in_channels=16, out_channels=120, kernel_size=5)
         self.f6 = nn.Linear(in_features=120, out_features=84)
-        self.f7 = nn.Linear(in_features=84, out_features=10)
 
     def forward(self, x):
         x = self.activationFunction(self.layer1(x))
@@ -68,6 +67,7 @@ class convolutionalNetwork(nn.Module):
         x = self.activationFunction(self.layer5(x))
         x = torch.flatten(x, 1)
         x = self.f6(x)
-        x = self.f7(x)
+        x = torch.cdist(x, self.centers) ** 2 
+        x = -self.beta * x
         
         return x

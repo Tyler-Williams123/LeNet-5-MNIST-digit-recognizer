@@ -12,7 +12,7 @@ def main():
 
     dataset = torch.utils.data.TensorDataset(*torch.load("data/MNIST_Preprocessed(CEL).pt"))
 
-    dataLoader = torch.utils.data.DataLoader(dataset, 100, shuffle=True, num_workers=0)
+    dataLoader = torch.utils.data.DataLoader(dataset, 120, shuffle=True, num_workers=2)
     loss_fn = torch.nn.CrossEntropyLoss()
     optim = torch.optim.Adam(LeNet5.parameters())
 
