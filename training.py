@@ -2,7 +2,7 @@ import time
 
 import torch
 import torchvision
-import torchvision.transforms as transforms # figure out why we use different loss functions just all of this, figure out multicore jank
+import torchvision.transforms as transforms # figure out why we use different loss functions just all of this
 import ConvNet
 
 device = torch.device("cuda")
@@ -12,9 +12,9 @@ def main():
 
     dataset = torch.utils.data.TensorDataset(*torch.load("data/MNIST_Preprocessed(CEL).pt"))
 
-    dataLoader = torch.utils.data.DataLoader(dataset, 120, shuffle=True, num_workers=2)
+    dataLoader = torch.utils.data.DataLoader(dataset, 125, shuffle=True, num_workers=2)
     loss_fn = torch.nn.CrossEntropyLoss()
-    optim = torch.optim.Adam(LeNet5.parameters())
+    optim = torch.optim.Adam(LeNet5.parameters(), lr=0.0005)
 
     torch.cuda.synchronize()
     start = time.perf_counter()
